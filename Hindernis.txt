@@ -1,0 +1,7 @@
+1. Not able to generate all possible assignments at one time (extremely high memory required)
+2. Takes too long to loop all possible assignments
+3. Fluctuating price
+4. Oil distribution in Barge
+5. Distance from vessel to vessel ... (possible to integrate osm?), currently assume only two locations
+6. Dummy???
+7. distributed system
