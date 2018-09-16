@@ -13,12 +13,12 @@ for p = 1:numVessel
     % barge is already at vessel port
     if bargeLocation(finalAssign(1,p),1) == 1
         
-        bargeArrangement(p,1,finalAssign(1,p)) = "1";
+        bargeArrangement(p,1,finalAssign(1,p)) = "vessel port";
         
         if bargeCapacity(finalAssign(1,p),vesselOiltype(p,1)) > vesselOilamount(p,1)
             
             bargeArrangement(p,2,finalAssign(1,p)) = datestr(bargeAvailtime(finalAssign(1,p),1));
-            bargeArrangement(p,5,finalAssign(1,p)) = "0";
+            bargeArrangement(p,5,finalAssign(1,p)) = "no";
             
             if bargeAvailtime(finalAssign(1,p),1) < vesselBerth(p,1)
                 bargeAvailtime(finalAssign(1,p),1) = vesselBerth(p,1) + vesselOiltransfer(p,1);
@@ -42,7 +42,7 @@ for p = 1:numVessel
             bargeCapacity(finalAssign(1,p),vesselOiltype(p,1)) = bargeInitialCapacity(finalAssign(1,p),vesselOiltype(p,1));
             
             bargeArrangement(p,2,finalAssign(1,p)) = datestr(bargeAvailtime(finalAssign(1,p),1));
-            bargeArrangement(p,5,finalAssign(1,p)) = "1";
+            bargeArrangement(p,5,finalAssign(1,p)) = "yes";
             
             if bargeAvailtime(finalAssign(1,p),1) < vesselBerth(p,1) 
                 bargeAvailtime(finalAssign(1,p),1) = vesselBerth(p,1) + vesselOiltransfer(p,1);
@@ -64,14 +64,14 @@ for p = 1:numVessel
     % barge starts at oil terminal
     else
         
-        bargeArrangement(p,1,finalAssign(1,p)) = "0";
+        bargeArrangement(p,1,finalAssign(1,p)) = "oil terminal";
          
         if bargeCapacity(finalAssign(1,p),vesselOiltype(p,1)) > vesselOilamount(p,1)
             % with enough oil, diretly travel to vessel port
             bargeAvailtime(finalAssign(1,p),1) = bargeAvailtime(finalAssign(1,p),1) + timetovessel;
             
             bargeArrangement(p,2,finalAssign(1,p)) = datestr(bargeAvailtime(finalAssign(1,p),1));
-            bargeArrangement(p,5,finalAssign(1,p)) = "0";
+            bargeArrangement(p,5,finalAssign(1,p)) = "no";
             
             if bargeAvailtime(finalAssign(1,p),1) < vesselBerth(p,1)
                 bargeAvailtime(finalAssign(1,p),1) = vesselBerth(p,1) + vesselOiltransfer(p,1);
@@ -95,7 +95,7 @@ for p = 1:numVessel
             bargeCapacity(finalAssign(1,p),vesselOiltype(p,1)) = bargeInitialCapacity(finalAssign(1,p),vesselOiltype(p,1));
             
             bargeArrangement(p,2,finalAssign(1,p)) = datestr(bargeAvailtime(finalAssign(1,p),1));
-            bargeArrangement(p,5,finalAssign(1,p)) = "1";
+            bargeArrangement(p,5,finalAssign(1,p)) = "yes";
             
             if bargeAvailtime(finalAssign(1,p),1) < vesselBerth(p,1) 
                 bargeAvailtime(finalAssign(1,p),1) = vesselBerth(p,1) + vesselOiltransfer(p,1);
