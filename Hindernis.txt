@@ -1,7 +1,18 @@
 1. Not able to generate all possible assignments at one time (extremely high memory required)
 2. Takes too long to loop all possible assignments
 3. Fluctuating price
-4. Oil distribution in Barge
+
 5. Distance from vessel to vessel ... (possible to integrate osm?), currently assume only two locations
-6. Dummy???
+
 7. distributed system
+
+
+0921
+1. process showing the for loops, standard block shapes
+2. refuel time at oil terminal as a separate line
+3. check if the best is best (check the codes)
+4. features to be presented to machine learning why its not a good assignment
+mayyyyyybe for example, the barge and vessel initial details 10 vessels and 4 barge look together
+however only applies to 10 and 4, need to find features independent on size
+5. spread the time to a week and extend transfer time
+6. 1004 afternoon 230
