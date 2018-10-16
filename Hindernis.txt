@@ -6,7 +6,6 @@
 
 7. distributed system
 
-
 0921
 1. process showing the for loops, standard block shapes
 2. refuel time at oil terminal as a separate line
@@ -16,3 +15,10 @@ mayyyyyybe for example, the barge and vessel initial details 10 vessels and 4 ba
 however only applies to 10 and 4, need to find features independent on size
 5. spread the time to a week and extend transfer time
 6. 1004 afternoon 230
+
+1. barge by barge 
+2. add vessel berth and depart time, bunker type and amount
+3. more detailed simulation flow chart
+4. features for filtering
+
+1018 1430
