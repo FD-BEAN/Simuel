@@ -1,9 +1,7 @@
 1. Not able to generate all possible assignments at one time (extremely high memory required)
 2. Takes too long to loop all possible assignments
 3. Fluctuating price
-
 5. Distance from vessel to vessel ... (possible to integrate osm?), currently assume only two locations
-
 7. distributed system
 
 0921
@@ -11,7 +9,7 @@
 2. refuel time at oil terminal as a separate line
 3. check if the best is best (check the codes)
 4. features to be presented to machine learning why its not a good assignment
-mayyyyyybe for example, the barge and vessel initial details 10 vessels and 4 barge look together
+for example, the barge and vessel initial details 10 vessels and 4 barge look together
 however only applies to 10 and 4, need to find features independent on size
 5. spread the time to a week and extend transfer time
 6. 1004 afternoon 230
@@ -22,3 +20,18 @@ however only applies to 10 and 4, need to find features independent on size
 4. features for filtering
 
 1018 1430
+
+by vessel
+Elapsed time is 2914.031473 seconds.
+
+by barge
+Elapsed time is 1928.558629 seconds.
+
+by barge
+Elapsed time is 1450.796840 seconds
+
+1st Nov
+**1. way to test the program that it gives best answer, like only one answer, if the program can reach
+2. machine learning
+**3. Barge 4 dummy no need to check
+4. Documentation

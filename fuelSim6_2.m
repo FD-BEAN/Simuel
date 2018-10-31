@@ -38,11 +38,11 @@ tic
 threshold = 5;
 
 % assume half the total number but not true, tend out to be 326176, generalized formula needed
-assignDiscarded = zeros(1,326176);
+assignDiscarded = zeros();
 counter = 1;
 for i = 1:assignAll
     % threshold set at 5
-    if max(histcounts(bargeAssign(i,:))) >= threshold
+    if max(histcounts(bargeAssign(i,:))) >= threshold || length(find(bargeAssign(i,:) == 4)) >= 4
         assignDiscarded(1,counter) = i;
         counter = counter + 1;
     end
@@ -62,7 +62,14 @@ for j = 1:assignValid
     bargeAvailtime = bargeInitialAvailtime;
     currentSelection = bargeAssign(j,:);
     
-    for k = 1:numVessel
+    barge1 = find(currentSelection == 1);
+    barge2 = find(currentSelection == 2);
+    barge3 = find(currentSelection == 3);
+    barge4 = find(currentSelection == 4);
+    
+    reindexing = [barge1, barge2,  barge3, barge4];
+    
+    for k = reindexing
         
         currentBarge = currentSelection(1,k);
         % check if bunker on the barge is enough for this transfer
@@ -138,7 +145,8 @@ bargeLocation = bargeInitialLocation;
 bargeArrangement = strings(10,8,numBarge);
 counter3 = [1, 1, 1, 1];
 
-Assign = finalAssign
+Assign = finalAssign;
+% Assign = [1,1,2,1,4,2,4,3,4,1];
 
 for p = 1:numVessel
     
