@@ -22,9 +22,10 @@ vesselBunker = vesselDetails(:,7);
 vesselBunkertype = vesselDetails(:,6);
 vesselTransfertime = minutes(vesselDetails(:,8));
 
-scatter(1:10,vesselBerth);
+scatter(1:10,vesselBerth,'*');
 hold on;
-scatter(1:10,vesselDepart);
+scatter(1:10,vesselDepart,'*');
+
 toc
 %% Assignment of vessel to barge (problem with bigger number of vessels)****
 tic
@@ -42,7 +43,7 @@ assignDiscarded = zeros();
 counter = 1;
 for i = 1:assignAll
     % threshold set at 5
-    if max(histcounts(bargeAssign(i,:))) >= threshold || length(find(bargeAssign(i,:) == 4)) >= 4
+    if max(histcounts(bargeAssign(i,:))) >= threshold || length(find(bargeAssign(i,:) == 4)) >= 2
         assignDiscarded(1,counter) = i;
         counter = counter + 1;
     end
@@ -54,6 +55,7 @@ assignValid = length(bargeAssign);
 toc
 %% Constraints checks
 tic
+
 assignCheckBool = zeros(assignValid,1);
 
 for j = 1:assignValid

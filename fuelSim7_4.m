@@ -8,12 +8,12 @@ timetoterminal = duration('03:00:00');
 timetovessel = duration('03:00:00');
 
 % Read the details of barge from excel for easier management
-[bargeDetails, bargetxt, rawbargedata] = xlsread('bargeDetails12.xlsx');
+[bargeDetails, bargetxt, rawbargedata] = xlsread('bargeDetails13.xlsx');
 bargeInitialCapacity = bargeDetails(1:4,3:8);
 bargeInitialAvailtime = datetime(datestr(bargeDetails(1:4,10) + datenum('30-Dec-1899')));
 
 % Read the details of vessel from excel for easier management
-[vesselDetails, vesseltxt, rawCelldata] = xlsread('vesselDetails12.xlsx');
+[vesselDetails, vesseltxt, rawCelldata] = xlsread('vesselDetails13.xlsx');
 numVessel = length(vesselDetails(:,1));
 vesselBerth = datetime(datestr(vesselDetails(:,4) + datenum('30-Dec-1899')));
 vesselDepart = datetime(datestr(vesselDetails(:,5) + datenum('30-Dec-1899')));
@@ -42,7 +42,7 @@ assignDiscarded = zeros();
 counter = 1;
 for i = 1:assignAll
     % threshold set at 5
-    if max(histcounts(bargeAssign(i,:))) >= threshold || length(find(bargeAssign(i,:) == 4)) >= 4
+    if max(histcounts(bargeAssign(i,:))) >= threshold || length(find(bargeAssign(i,:) == 4)) >= 3
         assignDiscarded(1,counter) = i;
         counter = counter + 1;
     end
