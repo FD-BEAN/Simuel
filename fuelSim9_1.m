@@ -260,17 +260,33 @@ end
 toc
 %% figure
 figure
+candle(vis(:,1:4),'k');
 yLabel = datestr(7.370612e+05:0.000002e+05:7.370632e+05);
 set(gca,'YTickLabel',yLabel);
 set(gca,'xtick',[1 2 3 4 5 6 7 8 9 10]);
 axis([0,11,737061.2,737063.2]);
-for i = 1:10
-    rectangle('Position',[i-0.25,vis(i,1),0.5,vis(i,4)-vis(i,1)],'EdgeColor','k','LineWidth',2)
-    text(i-0.1,(vis(i,4)+vis(i,1))/2,num2str(vis(i,6)))
-    hold on
-    plot([i,i],[vis(i,1),vis(i,3)],'LineWidth',4,'color','b')
-    plot([i,i],[vis(i,2),vis(i,4)],'LineWidth',4,'color','b')
-end
+text(0.9,737061.6,'1');
+text(1.9,737061.65,'2');
+text(2.9,737061.7,'3');
+text(3.9,737061.6,'4');
+text(4.9,737062.2,'1');
+text(5.9,737062.25,'2');
+text(6.9,737062.4,'3');
+text(7.9,737062.8,'1');
+text(8.9,737062.85,'2');
+text(9.9,737062.9,'3');
+
+figure
+candle([zeros(4,4);2 4 1 3]);
+xlim([0 10]);
+ylim([0 5]);
+set(gca,'ytick',[1 2 3 4 5]);
+set(gca,'YTickLabel',yLabel);
+text(1.5,4, 'vessel depart time');
+text(1.5,1, 'vessel arrival time');
+text(1.5,2, 'start transfer time');
+text(1.5,3, 'end transfer time');
+text(4.5,2.5,'Barge number');
 
 figure
 candle([zeros(4,4);2 4 1 3]);

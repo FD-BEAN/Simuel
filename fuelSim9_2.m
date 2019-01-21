@@ -43,7 +43,7 @@ assignDiscarded = zeros();
 counter = 1;
 for i = 1:assignAll
     % threshold set at 5
-    if max(histcounts(bargeAssign(i,:))) >= threshold || length(find(bargeAssign(i,:) == 4)) >= 2
+    if max(histcounts(bargeAssign(i,:))) >= threshold || length(find(bargeAssign(i,:) == 4)) >= 4
         assignDiscarded(1,counter) = i;
         counter = counter + 1;
     end

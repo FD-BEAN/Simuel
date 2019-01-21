@@ -145,10 +145,14 @@ bargeAvailtime = bargeInitialAvailtime;
 bargeArrangement = strings(10,8,numBarge);
 counter3 = [1, 1, 1, 1];
 
-vis = zeros(10,4);
+vis = zeros(10,6);
 vis(:,2) = datenum(vesselDepart);
 vis(:,3) = datenum(vesselBerth);
-        
+vis(:,5) = vesselBunkertype;
+vis(:,6) = finalAssign';
+
+vis_terminal = zeros(10,2);
+
 Assign = finalAssign;
 % Assign = [1,1,2,1,4,2,4,3,4,1];
 
@@ -203,7 +207,12 @@ for p = 1:numVessel
         bargeArrangement(counter3(1,currentBarge),8,currentBarge) = datestr(bargeAvailtime(currentBarge,1) + timetoterminal + topup);
         counter3(1,currentBarge) = counter3(1,currentBarge)+1;
         
+        vis_terminal(p,1) = datenum(bargeAvailtime(currentBarge,1));
+        
         bargeAvailtime(currentBarge,1) = bargeAvailtime(currentBarge,1) + timetoterminal + timetovessel + topup;
+        
+        vis_terminal(p,2) = datenum(bargeAvailtime(currentBarge,1));
+        
         bargeCapacity(currentBarge,vesselBunkertype(p,1)) = bargeInitialCapacity(currentBarge,vesselBunkertype(p,1));
         bargeArrangement(counter3(1,currentBarge),1,currentBarge) = strcat("vessel",num2str(p));
         bargeArrangement(counter3(1,currentBarge),6,currentBarge) = datestr(bargeAvailtime(currentBarge,1));
@@ -246,33 +255,55 @@ for r = 1:numBarge
     t.RowName = [];
 end
 toc
-%% figure
 
-figure
-candle(vis(:,1:4),'k');
-yLabel = datestr(7.370612e+05:0.000002e+05:7.370632e+05);
+%% figure
+%%% time and numerical axis cannot exist in one graph
+figure('Name','Barge-Vessel Arrangements','NumberTitle','off','Position',[650 150 600 400])
+xlabel('Vessel Number')
+ylabel('Datetime')
+yLabel = datestr(7.370612e+05:0.000002e+05:7.370632e+05,31);
 set(gca,'YTickLabel',yLabel);
 set(gca,'xtick',[1 2 3 4 5 6 7 8 9 10]);
 axis([0,11,737061.2,737063.2]);
-text(0.9,737061.6,'1');
-text(1.9,737061.65,'2');
-text(2.9,737061.7,'3');
-text(3.9,737061.6,'4');
-text(4.9,737062.2,'1');
-text(5.9,737062.25,'2');
-text(6.9,737062.4,'3');
-text(7.9,737062.8,'1');
-text(8.9,737062.85,'2');
-text(9.9,737062.9,'3');
+for i = 1:10
+    if vis(i,6) == 4
+        text(i-0.6,(vis(i,2)+vis(i,3))/2,'Dummy')
+        plot([i,i],[vis(i,2),vis(i,3)],'LineWidth',4,'color','b')
+        text(i-0.1,vis(i,3)-0.05,num2str(vis(i,5)),'color','b')
+    else
+        rectangle('Position',[i-0.25,vis(i,1),0.5,vis(i,4)-vis(i,1)],'EdgeColor','k','LineWidth',2)
+        text(i-0.1,(vis(i,4)+vis(i,1))/2,num2str(vis(i,6)))
+        hold on
+        plot([i,i],[vis(i,1),vis(i,3)],'LineWidth',4,'color','b')
+        plot([i,i],[vis(i,2),vis(i,4)],'LineWidth',4,'color','b')
+        text(i-0.1,vis(i,3)-0.05,num2str(vis(i,5)),'color','b')
+    end
+end
 
-figure
-candle([zeros(4,4);2 4 1 3]);
+for j = 1:10
+    if vis_terminal(j,1) ~= 0
+        rectangle('Position',[j-0.25,vis_terminal(j,1),0.5,vis_terminal(j,2)-vis_terminal(j,1)],'FaceColor','r','LineWidth',2)
+    end
+end
+
+
+figure('Name','Legend','NumberTitle','off','Position',[30 150 600 400])
+rectangle('Position',[4.75,2,0.5,1],'LineWidth',2)
+rectangle('Position',[4.75,1.5,0.5,0.5],'FaceColor','r','LineWidth',2)
+hold on
+plot([5,5],[3,4],'LineWidth',4,'color','b')
+plot([5,5],[1,1.5],'LineWidth',4,'color','b')
 xlim([0 10]);
 ylim([0 5]);
 set(gca,'ytick',[1 2 3 4 5]);
 set(gca,'YTickLabel',yLabel);
-text(1.5,4, 'vessel depart time');
-text(1.5,1, 'vessel arrival time');
-text(1.5,2, 'start transfer time');
-text(1.5,3, 'end transfer time');
-text(4.5,2.5,'Barge number');
+text(1.8,4, 'vessel depart time');
+text(1.8,1, 'vessel arrival time');
+text(1.8,2, 'start transfer time');
+text(1.8,3, 'end transfer time');
+text(4.9,2.5,'1');
+text(5.5,2.5,'Barge number');
+text(5.5,1.75,'Terminal Topup');
+text(4.9,0.85,'1','color','b');
+text(5.5,0.85,'Bunker Type')%% figure
+
