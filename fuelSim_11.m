@@ -6,16 +6,31 @@ load('C:\Users\SF314-51-71UP\Documents\MATLAB\data_1234123123.mat');
 %% Constraints checks
 tic
 
-initAss = [1 1 1 1 1 1 1 1 1 1];
+initAss = ones(1,numVessel);
 
-endAss = [4 4 4 4 4 4 4 4 4 4];
-
-saveAss = zeros(1000000,10);
+saveAss = zeros(1000000,numVessel);
 
 
 saveCount = 1;
 
-while (sum(initAss) ~= 40)
+while (sum(initAss) ~= 4*numVessel)
+    
+    if saveAss(1,1) ~= 0;
+        if max(histcounts(initAss)) >= 5 || length(find(initAss == 4)) >= 3
+            if initAss(10) == 4
+                for addOne = [10 9 8 7 6 5 4 3 2 1]
+                    if initAss(addOne) ~= 4
+                        initAss(addOne) = initAss(addOne) + 1;
+                        initAss(addOne+1:10) = 1;
+                        break;
+                    end
+                end
+            else
+                initAss(10) = initAss(10) + 1;
+            end
+            continue;
+        end
+    end
     
     
     stopPoint = 0;
@@ -102,7 +117,7 @@ while (sum(initAss) ~= 40)
             saveAss(saveCount,:) = initAss;
             saveCount = saveCount + 1;
             for addOne = [10 9 8 7 6 5 4 3 2 1]
-                if initAss(addOne) ~= 4                   
+                if initAss(addOne) ~= 4
                     initAss(addOne) = initAss(addOne) + 1;
                     initAss(addOne+1:10) = 1;
                     break;
@@ -124,7 +139,7 @@ for i = 1:(saveCount-1)
         counter = counter + 1;
     end
 end
-        
+
 fuelProfit =30;
 
 assignFeasible = length(assignFiltered);

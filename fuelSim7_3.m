@@ -43,7 +43,7 @@ assignDiscarded = zeros();
 counter = 1;
 for i = 1:assignAll
     % threshold set at 5
-    if max(histcounts(bargeAssign(i,:))) >= threshold || length(find(bargeAssign(i,:) == 4)) >= 2
+    if max(histcounts(bargeAssign(i,:))) >= threshold || length(find(bargeAssign(i,:) == 4)) >= 4
         assignDiscarded(1,counter) = i;
         counter = counter + 1;
     end
@@ -66,7 +66,7 @@ for j = 1:assignValid
     
     barge1 = find(currentSelection == 1);
     barge2 = find(currentSelection == 2);
-    barge3 = find(currentSelection == 3);
+    barge3 = find(currentSelection == 3);       
 %     barge4 = find(currentSelection == 4);
     
     reindexing = [barge1, barge2,  barge3];
