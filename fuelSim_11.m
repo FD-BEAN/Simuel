@@ -6,6 +6,7 @@ load('C:\Users\SF314-51-71UP\Documents\MATLAB\data_1234123123.mat');
 %% Constraints checks
 tic
 
+
 initAss = ones(1,numVessel);
 
 saveAss = zeros(1000000,numVessel);
@@ -177,8 +178,8 @@ vis(:,6) = finalAssign';
 
 vis_terminal = zeros(10,2);
 
-Assign = finalAssign;
-% Assign = [1,1,2,1,4,2,4,3,4,1];
+% Assign = finalAssign;
+Assign = [1,2,3,4,1,2,4,1,1,3];
 
 for p = 1:numVessel
     

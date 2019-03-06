@@ -32,48 +32,63 @@ vesselTransfertime = minutes(vesselDetails(:,8));
 %% Constraints checks
 tic
 
-initAss = [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1];
+initAss = ones(1,numVessel);
 
-saveAss = zeros(10000000,15);
-
+saveAss = zeros(10000000,numVessel);
 
 saveCount = 1;
 
-% while (sum(initAss) ~= (4*numVessel))
-while (initAss(1) ~= 4)
+stopPoint = 1;
+
+bargeTempCapacity = bargeInitialCapacity;
+bargeTempAvailtime = bargeInitialAvailtime;
+
+while (initAss(1)+sum(initAss(14:15))) ~= (12)
+    %     while (initAss(1) ~= 4)
     
-    %     if max(histcounts(initAss)) >= 7 || sum(diff([0 find(diff(initAss)) numel(initAss)]) >= 4) >= 1 || length(find(initAss == 1)) <= 3 || length(find(initAss == 2)) <= 3 || length(find(initAss == 3)) <= 3
     if saveAss(1,1) ~= 0
-        if max(histcounts(initAss)) >= 7 || length(find(initAss == 4)) >= 3
+        if max(histcounts(initAss)) >= 7 || sum(diff([0 find(diff(initAss)) numel(initAss)]) >= 4) >= 1 || length(find(initAss == 1)) <= 3 || length(find(initAss == 2)) <= 3 || length(find(initAss == 3)) <= 3
+            
+            %                     if max(histcounts(initAss)) >= 7 || length(find(initAss == 4)) >= 3
             if initAss(15) == 4
                 for addOne = [15 14 13 12 11 10 9 8 7 6 5 4 3 2 1]
                     if initAss(addOne) ~= 4
                         initAss(addOne) = initAss(addOne) + 1;
                         initAss(addOne+1:15) = 1;
+                        stopPoint = 1;
                         break;
                     end
                 end
             else
                 initAss(15) = initAss(15) + 1;
             end
+                        
             continue;
         end
     end
     
-    stopPoint = 0;
+    if stopPoint == 1
+        bargeCapacity = bargeInitialCapacity;
+        bargeAvailtime = bargeInitialAvailtime;
+    else
+        bargeCapacity = bargeTempCapacity;
+        bargeAvailtime = bargeTempAvailtime;
+    end
     
-    bargeCapacity = bargeInitialCapacity;
-    bargeAvailtime = bargeInitialAvailtime;
     
-    jplusCriteria = 1;
     
-    for k = 1:numVessel
-        stopPoint = stopPoint + 1;
+    
+    for k = stopPoint:numVessel
+        
+        bargeTempCapacity = bargeCapacity;
+        bargeTempAvailtime = bargeAvailtime;
+        
         currentBarge = initAss(1,k);
         
         if currentBarge == 4
-            jplusCriteria = jplusCriteria + 1;
-            if jplusCriteria == 16
+            stopPoint = stopPoint + 1;
+            if stopPoint == 16
+                stopPoint = 1;
                 saveAss(saveCount,:) = initAss;
                 saveCount = saveCount + 1;
                 for addOne = [15 14 13 12 11 10 9 8 7 6 5 4 3 2 1]
@@ -98,17 +113,14 @@ while (initAss(1) ~= 4)
                 end
                 bargeCapacity(currentBarge,vesselBunkertype(k,1)) = bargeCapacity(currentBarge,vesselBunkertype(k,1)) - vesselBunker(k,1);
                 
-                jplusCriteria = jplusCriteria + 1;
+                stopPoint = stopPoint + 1;
             else
                 %check first number until the stop point if they are the same
                 
-                if initAss(stopPoint) == 4
-                    initAss(stopPoint) = 1;
-                    initAss(stopPoint+1:15) = 1;
-                else
-                    initAss(stopPoint) = initAss(stopPoint) + 1;
-                    initAss(stopPoint+1:15) = 1;
-                end
+                
+                initAss(stopPoint) = initAss(stopPoint) + 1;
+                initAss(stopPoint+1:15) = 1;
+                
                 break
             end
             
@@ -125,22 +137,20 @@ while (initAss(1) ~= 4)
                 end
                 bargeCapacity(currentBarge,vesselBunkertype(k,1)) = bargeCapacity(currentBarge,vesselBunkertype(k,1)) - vesselBunker(k,1);
                 
-                jplusCriteria = jplusCriteria + 1;
+                stopPoint = stopPoint + 1;
                 
             else
                 
-                if initAss(stopPoint) == 4
-                    initAss(stopPoint) = 1;
-                    initAss(stopPoint+1:15) = 1;
-                else
-                    initAss(stopPoint) = initAss(stopPoint) + 1;
-                    initAss(stopPoint+1:15) = 1;
-                end
+                
+                initAss(stopPoint) = initAss(stopPoint) + 1;
+                initAss(stopPoint+1:15) = 1;
+                
                 break
             end
         end
         
-        if jplusCriteria == 16
+        if stopPoint == 16
+            stopPoint = 1;
             saveAss(saveCount,:) = initAss;
             saveCount = saveCount + 1;
             for addOne = [15 14 13 12 11 10 9 8 7 6 5 4 3 2 1]

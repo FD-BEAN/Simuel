@@ -1,85 +1,67 @@
 % do not pregenerate assignments
-% 15 vessels
 
 %% initialization of parameters/variables
 clear;clc;
-%% initialization of parameters/variables
-tic
-numBarge = 4;
-
-timetoterminal = duration('03:00:00');
-timetovessel = duration('03:00:00');
-
-% Read the details of barge from excel for easier management
-[bargeDetails, bargetxt, rawbargedata] = xlsread('bargeDetails11.xlsx');
-bargeInitialCapacity = bargeDetails(1:4,3:8);
-bargeInitialAvailtime = datetime(datestr(bargeDetails(1:4,10) + datenum('30-Dec-1899')));
-
-% Read the details of vessel from excel for easier management
-[vesselDetails, vesseltxt, rawCelldata] = xlsread('vesselDetails_15_nd.xlsx');
-numVessel = length(vesselDetails(:,1));
-vesselBerth = datetime(datestr(vesselDetails(:,4) + datenum('30-Dec-1899')));
-vesselDepart = datetime(datestr(vesselDetails(:,5) + datenum('30-Dec-1899')));
-% assume each vessel requires only one type of oil
-vesselBunker = vesselDetails(:,7);
-vesselBunkertype = vesselDetails(:,6);
-vesselTransfertime = minutes(vesselDetails(:,8));
-%
-% scatter(1:numVessel,vesselBerth);
-% hold on;
-% scatter(1:numVessel,vesselDepart);
-% toc
+load('C:\Users\SF314-51-71UP\Documents\MATLAB\data_1234123123.mat');
 %% Constraints checks
 tic
 
-initAss = [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1];
 
-saveAss = zeros(10000000,15);
+initAss = ones(1,numVessel);
 
+saveAss = zeros(1000000,numVessel);
 
 saveCount = 1;
 
-% while (sum(initAss) ~= (4*numVessel))
-while (initAss(1) ~= 4)
+stopPoint = 1;
+
+bargeTempCapacity = bargeInitialCapacity;
+bargeTempAvailtime = bargeInitialAvailtime;
+
+while (sum(initAss) ~= 4*numVessel)
     
-    %     if max(histcounts(initAss)) >= 7 || sum(diff([0 find(diff(initAss)) numel(initAss)]) >= 4) >= 1 || length(find(initAss == 1)) <= 3 || length(find(initAss == 2)) <= 3 || length(find(initAss == 3)) <= 3
-    if saveAss(1,1) ~= 0
-        if max(histcounts(initAss)) >= 7 || length(find(initAss == 4)) >= 3
-            if initAss(15) == 4
-                for addOne = [15 14 13 12 11 10 9 8 7 6 5 4 3 2 1]
-                    if initAss(addOne) ~= 4
-                        initAss(addOne) = initAss(addOne) + 1;
-                        initAss(addOne+1:15) = 1;
-                        break;
-                    end
-                end
-            else
-                initAss(15) = initAss(15) + 1;
-            end
-            continue;
-        end
+%     if saveAss(1,1) ~= 0
+%         if max(histcounts(initAss)) >= 5 || length(find(initAss == 4)) >= 3
+%             if initAss(10) == 4
+%                 for addOne = [10 9 8 7 6 5 4 3 2 1]
+%                     if initAss(addOne) ~= 4
+%                         initAss(addOne) = initAss(addOne) + 1;
+%                         initAss(addOne+1:10) = 1;
+%                         break;
+%                     end
+%                 end
+%             else
+%                 initAss(10) = initAss(10) + 1;
+%             end
+%             continue;
+%         end
+%     end
+    
+    if stopPoint == 1
+        bargeCapacity = bargeInitialCapacity;
+        bargeAvailtime = bargeInitialAvailtime;
+    else
+        bargeCapacity = bargeTempCapacity;
+        bargeAvailtime = bargeTempAvailtime;
     end
     
-    stopPoint = 0;
-    
-    bargeCapacity = bargeInitialCapacity;
-    bargeAvailtime = bargeInitialAvailtime;
-    
-    jplusCriteria = 1;
-    
-    for k = 1:numVessel
-        stopPoint = stopPoint + 1;
+    for k = stopPoint:numVessel
+        
+        bargeTempCapacity = bargeCapacity;
+        bargeTempAvailtime = bargeAvailtime;
+        
         currentBarge = initAss(1,k);
         
         if currentBarge == 4
-            jplusCriteria = jplusCriteria + 1;
-            if jplusCriteria == 16
+            stopPoint = stopPoint + 1;
+            if stopPoint == 11
+                stopPoint = 1;
                 saveAss(saveCount,:) = initAss;
                 saveCount = saveCount + 1;
-                for addOne = [15 14 13 12 11 10 9 8 7 6 5 4 3 2 1]
+                for addOne = [10 9 8 7 6 5 4 3 2 1]
                     if initAss(addOne) ~= 4
                         initAss(addOne) = initAss(addOne) + 1;
-                        initAss(addOne+1:15) = 1;
+                        initAss(addOne+1:10) = 1;
                         break;
                     end
                 end
@@ -98,17 +80,13 @@ while (initAss(1) ~= 4)
                 end
                 bargeCapacity(currentBarge,vesselBunkertype(k,1)) = bargeCapacity(currentBarge,vesselBunkertype(k,1)) - vesselBunker(k,1);
                 
-                jplusCriteria = jplusCriteria + 1;
+                stopPoint = stopPoint + 1;
             else
                 %check first number until the stop point if they are the same
                 
-                if initAss(stopPoint) == 4
-                    initAss(stopPoint) = 1;
-                    initAss(stopPoint+1:15) = 1;
-                else
-                    initAss(stopPoint) = initAss(stopPoint) + 1;
-                    initAss(stopPoint+1:15) = 1;
-                end
+                initAss(stopPoint) = initAss(stopPoint) + 1;
+                initAss(stopPoint+1:10) = 1;
+                
                 break
             end
             
@@ -125,28 +103,25 @@ while (initAss(1) ~= 4)
                 end
                 bargeCapacity(currentBarge,vesselBunkertype(k,1)) = bargeCapacity(currentBarge,vesselBunkertype(k,1)) - vesselBunker(k,1);
                 
-                jplusCriteria = jplusCriteria + 1;
+                stopPoint = stopPoint + 1;
                 
             else
                 
-                if initAss(stopPoint) == 4
-                    initAss(stopPoint) = 1;
-                    initAss(stopPoint+1:15) = 1;
-                else
-                    initAss(stopPoint) = initAss(stopPoint) + 1;
-                    initAss(stopPoint+1:15) = 1;
-                end
+                initAss(stopPoint) = initAss(stopPoint) + 1;
+                initAss(stopPoint+1:10) = 1;
+                
                 break
             end
         end
         
-        if jplusCriteria == 16
+        if stopPoint == 11
+            stopPoint = 1;
             saveAss(saveCount,:) = initAss;
             saveCount = saveCount + 1;
-            for addOne = [15 14 13 12 11 10 9 8 7 6 5 4 3 2 1]
+            for addOne = [10 9 8 7 6 5 4 3 2 1]
                 if initAss(addOne) ~= 4
                     initAss(addOne) = initAss(addOne) + 1;
-                    initAss(addOne+1:15) = 1;
+                    initAss(addOne+1:10) = 1;
                     break;
                 end
             end
@@ -159,14 +134,22 @@ toc
 tic
 % create an array indexing all feasible assignments from assignBarge cell
 
+counter = 1;
+for i = 1:(saveCount-1)
+    if max(histcounts(saveAss(i,:))) < threshold && length(find(saveAss(i,:) == 4)) < 4
+        assignFiltered(counter,:) = saveAss(i,:);
+        counter = counter + 1;
+    end
+end
+
 fuelProfit =30;
 
-assignFeasible = saveCount - 1;
+assignFeasible = length(assignFiltered);
 profitAssign = zeros(assignFeasible, 1);
 
 for m = 1:assignFeasible
     profitBarges = zeros(1,numBarge);
-    currentAssignment = saveAss(m,:);
+    currentAssignment = assignFiltered(m,:);
     for n = 1:numVessel
         if currentAssignment(1,n) ~= 4
             profitBarges(1,currentAssignment(1,n)) = profitBarges(1,currentAssignment(1,n)) + fuelProfit * vesselBunker(n,1);
@@ -178,7 +161,7 @@ for m = 1:assignFeasible
 end
 
 [max_revenue,best_assign] = max(profitAssign);
-finalAssign = saveAss(best_assign,:);
+finalAssign = assignFiltered(best_assign,:);
 toc
 %% Record arrangement of barges for the best assignment
 tic
@@ -188,7 +171,7 @@ bargeAvailtime = bargeInitialAvailtime;
 bargeArrangement = strings(10,8,numBarge);
 counter3 = [1, 1, 1, 1];
 
-vis = zeros(15,6);
+vis = zeros(10,6);
 vis(:,2) = datenum(vesselDepart);
 vis(:,3) = datenum(vesselBerth);
 vis(:,5) = vesselBunkertype;
@@ -291,7 +274,7 @@ toc
 %% Tabulate the best arrangement
 tic
 for r = 1:numBarge
-    f = figure('Name',strcat("Barge ",num2str(r)),'NumberTitle','off','Position', [240 440-(r-1)*170 830 200]);
+    f = figure('Position', [240 440-(r-1)*170 830 200]);
     t = uitable('Parent', f, 'Position', [0 -15 905 220], 'Data', cellstr(bargeArrangement(:,:,r)));
     t.ColumnWidth = {70, 120, 120, 70, 90, 120, 120, 120};
     t.ColumnName = {'Destination', 'Berth Time','Departure time','Bunker Type','Bunker Amount','Barge Arrival', 'Start Transfer', 'End Transfer'};
@@ -304,11 +287,11 @@ toc
 figure('Name','Barge-Vessel Arrangements','NumberTitle','off','Position',[650 150 600 400])
 xlabel('Vessel Number')
 ylabel('Datetime')
-
-set(gca,'xtick',[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15]);
-axis([0,16,datenum(vesselBerth(1))-0.5,datenum(vesselDepart(15))+0.5]);
-
-for i = 1:15
+yLabel = datestr(7.370612e+05:0.000002e+05:7.370632e+05,31);
+set(gca,'YTickLabel',yLabel);
+set(gca,'xtick',[1 2 3 4 5 6 7 8 9 10]);
+axis([0,11,737061.2,737063.2]);
+for i = 1:10
     if vis(i,6) == 4
         text(i-0.6,(vis(i,2)+vis(i,3))/2,'Dummy')
         plot([i,i],[vis(i,2),vis(i,3)],'LineWidth',4,'color','b')
@@ -325,19 +308,17 @@ end
 
 for j = 1:10
     if vis_terminal(j,1) ~= 0
-        rectangle('Position',[j-0.25,vis_terminal(j,1),0.5,vis_terminal(j,2)-vis_terminal(j,1)],'EdgeColor','r','LineWidth',2)
+        rectangle('Position',[j-0.25,vis_terminal(j,1),0.5,vis_terminal(j,2)-vis_terminal(j,1)],'FaceColor','r','LineWidth',2)
     end
 end
 
-yLabel = datestr(cellfun(@str2num,get(gca,'YTickLabel'))*10^5,31);
-set(gca,'YTickLabel',yLabel);
-%% legend
+
 figure('Name','Legend','NumberTitle','off','Position',[30 150 600 400])
 rectangle('Position',[4.75,2,0.5,1],'LineWidth',2)
-rectangle('Position',[4.75,1.5,0.5,0.5],'EdgeColor','r','LineWidth',2)
+rectangle('Position',[4.75,1.5,0.5,0.5],'FaceColor','r','LineWidth',2)
 hold on
 plot([5,5],[3,4],'LineWidth',4,'color','b')
-plot([5,5],[1,2],'LineWidth',4,'color','b')
+plot([5,5],[1,1.5],'LineWidth',4,'color','b')
 xlim([0 10]);
 ylim([0 5]);
 set(gca,'ytick',[1 2 3 4 5]);

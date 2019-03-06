@@ -1,6 +1,3 @@
-%%% visualization
-
-
 %% initialization of parameters/variables
 clear;clc;
 %% initialization of parameters/variables
@@ -24,7 +21,7 @@ vesselDepart = datetime(datestr(vesselDetails(:,5) + datenum('30-Dec-1899')));
 vesselBunker = vesselDetails(:,7);
 vesselBunkertype = vesselDetails(:,6);
 vesselTransfertime = minutes(vesselDetails(:,8));
-load two_dumm.mat;
+load no_dumm.mat;
 assignValid = length(bargeAssign);
 % 
 % scatter(1:numVessel,vesselBerth);
