@@ -2,7 +2,7 @@
 
 %% initialization of parameters/variables
 clear;clc;
-load('C:\Users\SF314-51-71UP\Documents\MATLAB\data_1234123123.mat');
+load('data_1234123123.mat');
 %% Constraints checks
 tic
 
